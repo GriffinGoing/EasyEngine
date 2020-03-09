@@ -18,6 +18,11 @@ from helperFunctions import eventNum
 
 class menuEngine():
 
+    """This is the event counter for user-created events, call with evCnt(). The use of a  lambda 
+    function cuts down the necessary code further on, and allows events to be added retroactivey
+    and dynamically without harming earlier events"""
+    evCnt = lambda: helperFunctions.eventNum.newEvent(helperFunctions.eventNum)
+
     def __init__(self, title):
         self.title = title
         self.running = False
@@ -98,10 +103,6 @@ class menuEngine():
                 if event.key in self.key_events.keys():
                     self.key_events[event.key](self.game_delta_time)
 
-    """ This is the event counter for our manually created events, call with evCnt()
-     This is cast as a lambda function to allow easy incrementing, such that events can be added retroactivey
-     and dynamically without harming earlier events"""
-    evCnt = lambda: helperFuncs.eventNum.newEvent(helperFuncs.eventNum)
 
     """Define music to play for menu using pygames mixer. Requires only a file path."""
     def setMusic(self, musicPath):
@@ -180,9 +181,15 @@ class menuEngine():
         self.screen.fill(black) #give them something to look at while we do all this wibbly wobbly timey wimey math
         screenWidth = Settings.width
         screenHeight = Settings.height
-        fadeTimePerImage = 5.983205318450928  # time for fade in and fade out per image
+
+	"""TO DO - add machine benchmarking for fadeTime in a similiar fashion to commented out code from my machine below"""
+
+        fadeTimePerImage = 5.983205318450928  # time for fade in and fade out per image.
+
         darkTime = .5 #time between the previous and next image during which the screen is blank
-        #two lines below are for benchmarking machines. above constant is from my machine
+
+        """two lines below are for benchmarking machines. above constant is from my machine, calculated by running 
+        a miniature version of the process and adding known constants"""
         # fadeFrameTimePerFrame = 0.011731775134217505 #time in seconds that each fading frame requires
         # print(fadeFrameTimePerFrame * 510) #print total fade time per image. For testing purposes on various machines
         numImages = len(introScreens) #the number of intro screens
@@ -196,26 +203,29 @@ class menuEngine():
             imageWidth = introScreens[i].get_width()
             imageHeight = introScreens[i].get_height()
 
-            #resize to display size if too large
+            #TO ADD - resize to display size if image is too large
 
-            #else, calculate x and y position
+            #calculate x and y position for centering
             x = (screenWidth / 2) - (imageWidth / 2)
             y = (screenHeight / 2) - (imageHeight / 2)
 
-            for j in range(256):
+            for j in range(256):#fade in
                 introScreens[i].set_alpha(j)
                 self.screen.fill(black)
                 self.screen.blit(introScreens[i], (x, y))
                 pygame.display.flip()
                 time.sleep(.01)
-            time.sleep(imageHoldTime)
-            for j in range(255):
+
+            time.sleep(imageHoldTime) #display the image
+
+            for j in range(255): #fade out
                 introScreens[i].set_alpha(255-(j+1))
                 self.screen.fill(black)
                 self.screen.blit(introScreens[i], (x, y))
                 pygame.display.flip()
                 time.sleep(.01)
-            time.sleep(darkTime)
+
+            time.sleep(darkTime) #time between fade out of one image and fade in of next image
           
     """The main menu loop, which makes animating the menu possible"""
     def run(self):
@@ -245,7 +255,7 @@ class menuEngine():
             self.screen.blit(self.currentSelectorImage, self.selectorLocations[self.currentSelection])
 
             # Generate outputs
-            # d.update()
+            # d.update() #this is likely unnecessary, but doing further testing to confirm
             self.drawables.draw(self.screen)
 
             # Show statistics?
