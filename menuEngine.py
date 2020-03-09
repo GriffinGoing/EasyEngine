@@ -3,7 +3,7 @@ The menu engine is constructed in such a way that parameters and images need onl
 be converted, processed, and implemented as desired, with much of the process abstracted away from the user. Thus, it
 is the beginning of a 'plug and play' game blueprint. This interface requires only paths to the necessary image and
 sound files be provided, and the respective functions be bound to the desired keys in pygame.
-Authored by Griffin Going, along with GVSU Engine code."""
+Authored by Griffin Going, with inspiration and insight from Ira Woodring and his LEAGUE engine."""
 
 import abc
 import os
@@ -14,9 +14,8 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import  sys
 sys.path.append('.')
-from engine.league.league.settings import *
-from engine.league.league import *
-from helperFuncs import eventNum
+import settings
+from helperFunctions import eventNum
 
 class menuEngine():
 
@@ -118,7 +117,7 @@ class menuEngine():
 
     """sets up the selector sprite by taking in an array of images, and a pixel size for the selector, converting
     each image as necessary, and then scaling each image. Stores the number of sprites for the iterateSelectorSprite
-     function, as to further abstract and simplify use of the menu engine for the user"""""
+     function, as to further abstract and simplify use of the menu engine for the user"""
     def setSelectorSprite(self, selectorSprite, x, y):
         self.selectorSprite = selectorSprite
         self.numSelectorSprites = len(selectorSprite)
@@ -156,6 +155,7 @@ class menuEngine():
             self.currentSelection = 0
 
             print(self.currentSelection)
+
     """Does what it says - plays the music"""
     def playMusic(self):
         pygame.mixer.music.play(-1)
@@ -217,9 +217,9 @@ class menuEngine():
                 pygame.display.flip()
                 time.sleep(.01)
             time.sleep(darkTime)
-
+          
+    """The main menu loop, which makes animating the menu possible"""
     def run(self):
-        """The main menu loop, which makes animating the menu possible"""
         self.running = True
         while self.running:
             # The time since the last check
