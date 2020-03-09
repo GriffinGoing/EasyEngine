@@ -7,10 +7,9 @@ Authored by Griffin Going, with inspiration and insight from Ira Woodring and hi
 
 import abc
 import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import time
 import pygame
-
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import  sys
 sys.path.append('.')
